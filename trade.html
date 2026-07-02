@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1400">
+    <title>Trade Machine</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    
+</head>
+<body>
+    <a href="index.html" class="home-btn" title="Volver al inicio">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+    </a>
+    <div id="player-tooltip" class="player-tooltip"></div>
+    <div id="loader">
+        <div class="spinner"></div>
+        <div style="font-size: 14px; font-weight: 500; color: var(--text-muted); margin-top: 15px;">Cargando Datos...</div>
+    </div>
+
+    <div class="top-bar">
+        <div class="brand">
+            <h1>Trade Machine</h1>
+            <p>Simulador de Traspasos</p>
+        </div>
+        <div class="economy-widgets">
+            <div class="widget">
+                <span>Equipos Involucrados</span>
+                <strong id="teams-count">2</strong>
+            </div>
+            <div class="widget highlight" id="trade-status">
+                <span>Estado</span>
+                <strong style="color: var(--text-muted); font-size: 18px;">Pendiente</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="trade-board" id="trade-board">
+        <!-- Columns will be injected here -->
+    </div>
+    
+    <div class="trade-validation panel" id="trade-validation" style="display: none;">
+        <h2 class="panel-title" style="margin-bottom: 15px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">Resumen del Traspaso</h2>
+        <div id="validation-details" style="display: flex; flex-direction: column; gap: 10px;"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="js/reglas.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
+
+

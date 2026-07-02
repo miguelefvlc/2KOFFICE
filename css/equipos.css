@@ -1,0 +1,111 @@
+.header-container {
+    text-align: center;
+    margin-bottom: 2rem;
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+}
+
+
+
+.header-container h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 5px;
+}
+
+.conferences-container {
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    width: 100%;
+    max-width: 1400px;
+}
+
+.conference-section {
+    flex: 1;
+    background: var(--bg-panel);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.conference-title-img {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-height: 80px;
+    object-fit: contain;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 15px;
+    width: 100%;
+}
+
+.divisions-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.division-col {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.division-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.team-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.team-card:hover {
+    transform: translateY(-5px);
+}
+
+.team-logo {
+    width: 65px;
+    height: 65px;
+    object-fit: contain;
+    transition: transform 0.2s;
+}
+
+.team-card:hover .team-logo {
+    transform: scale(1.1);
+}
+
+.team-info {
+    display: none;
+}
+
+@media (max-width: 992px) {
+    .conferences-container {
+        flex-direction: column;
+    }
+    .divisions-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+}

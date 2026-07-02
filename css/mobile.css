@@ -1,0 +1,120 @@
+/* mobile.css - Estilos responsivos (Móviles y Tablets < 768px) */
+
+body {
+    padding: 10px; /* Reducir padding general para ganar espacio */
+}
+
+/* --- Layout Principal --- */
+.main-layout {
+    grid-template-columns: 1fr; /* Apilar paneles en una sola columna */
+    gap: 15px;
+}
+
+/* --- Barra Superior --- */
+.top-bar {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+}
+
+.economy-widgets {
+    width: 100%;
+    flex-wrap: wrap; /* Permitir que bajen de línea si no caben */
+    justify-content: center;
+}
+
+/* --- Barra de Equipos --- */
+.teams-bar {
+    overflow-x: auto; /* Habilitar scroll horizontal */
+    padding-bottom: 10px;
+    justify-content: flex-start;
+    gap: 8px;
+    -webkit-overflow-scrolling: touch;
+}
+.teams-bar::-webkit-scrollbar { height: 4px; }
+.teams-bar::-webkit-scrollbar-thumb { background: var(--border-subtle); border-radius: 2px; }
+
+.team-logo-wrapper {
+    flex: 0 0 42px; /* Evitar que los logos se encojan */
+}
+
+/* --- Tablas (Vista de Tarjetas) --- */
+.table-wrap, .table-wrap-clean {
+    overflow-x: hidden;
+    max-height: none;
+    border: none;
+}
+
+table, thead, tbody, th, td, tr {
+    display: block;
+    width: 100%;
+}
+
+thead tr {
+    /* Ocultar la cabecera original, pero mantenerla accesible para screen readers */
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+}
+
+tr {
+    margin-bottom: 15px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    background-color: var(--bg-panel);
+    overflow: hidden;
+}
+
+td {
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative;
+    padding: 12px 10px 12px 45%;
+    text-align: right;
+    min-height: 40px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+td:last-child {
+    border-bottom: 0;
+}
+
+td::before {
+    /* Las etiquetas data-label se inyectan mediante CSS content */
+    content: attr(data-label);
+    position: absolute;
+    left: 12px;
+    width: 40%;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+/* Modificadores para alinear el contenido en móvil */
+td > div, td > img, td > a {
+    text-align: right;
+}
+
+/* --- index.html (Menú Principal) --- */
+.cards-container {
+    flex-direction: column; /* Apilar tarjetas del menú principal */
+    gap: 1.5rem;
+    padding: 0 1rem;
+}
+
+.header-container h1 {
+    font-size: 2.2rem; /* Reducir tamaño del título en móvil */
+}
+
+.subtitle {
+    font-size: 0.9rem;
+}
+
+.card {
+    padding: 2rem 1.5rem; /* Ajustar padding de las tarjetas */
+}

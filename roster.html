@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roster - 2K OFFICE</title>
+    <!-- Fuentes: Inter para UI, JetBrains Mono para datos numéricos -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- PapaParse para CSV -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/roster.css">
+</head>
+<body>
+
+    <a href="equipos.html" class="home-btn" title="Volver a Equipos">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
+        </svg>
+    </a>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Cargando datos del equipo...</p>
+    </div>
+
+    <div class="main-layout" id="roster-content" style="display: none; max-width: 1400px; margin: 0 auto;">
+        
+        <!-- HEADER EQUIPO -->
+        <div id="roster-nav-bar" class="roster-nav-bar">
+            <!-- JS will populate the 30 logos -->
+        </div>
+
+        <div class="team-header-container">
+            <img src="" alt="Team Logo" id="roster-team-logo" class="roster-team-logo">
+            <h1 id="roster-team-name">Cargando...</h1>
+        </div>
+
+        
+        <div class="two-col-layout">
+        
+        <div class="two-col-layout">
+            
+            <div class="left-col-wrapper">
+                <!-- PANEL JUGADORES -->
+                <div class="panel players-panel">
+                    <div class="panel-header">
+                        <h2>ROSTER</h2>
+                    </div>
+                    <div class="panel-content">
+                        <div class="table-container">
+                            <table class="data-table" id="roster-table">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left;">Jugador</th>
+                                        <th class="text-center">Pos</th>
+                                        <th class="text-center">Rat</th>
+                                        <th class="text-center">Edad</th>
+                                        <th class="text-center">Bird</th>
+                                        <th class="text-center">R</th>
+                                        <th class="text-right">26/27</th>
+                                        <th class="text-right">27/28</th>
+                                        <th class="text-right">28/29</th>
+                                        <th class="text-right">29/30</th>
+                                        <th class="text-right">30/31</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="roster-body">
+                                    <!-- JS will populate -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right-col-stack">
+                <!-- PANEL ECONOMIA -->
+                <div class="panel economy-panel">
+                    <div class="panel-header">
+                        <h2>ECONOMÍA</h2>
+                    </div>
+                    <div class="panel-content">
+                        <table class="data-table" id="economy-table">
+                            <thead>
+                                <tr>
+                                    <th>Concepto</th>
+                                    <th class="text-right">Cantidad ($)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="economy-body">
+                                <!-- JS will populate -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- PANEL RONDAS -->
+                <div class="panel draft-panel">
+                    <div class="panel-header">
+                        <h2>RONDAS</h2>
+                    </div>
+                    <div class="panel-content">
+                        <table class="data-table" id="draft-table">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Año</th>
+                                    <th class="text-center">Ronda</th>
+                                    <th>Equipo Original</th>
+                                </tr>
+                            </thead>
+                            <tbody id="draft-body">
+                                <!-- JS will populate -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="js/roster.js"></script>
+</body>
+</html>
+

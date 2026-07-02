@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1400">
+    <title>SIMULADOR GLOBAL | Pro-GM Software</title>
+    <!-- Fuentes: Inter para UI limpia, JetBrains Mono para datos numéricos -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Incluimos PapaParse para leer los CSV directamente desde Google Sheets -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <a href="fa.html" class="home-btn" title="Volver a FA Office">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+    </a>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <p>Cargando datos locales...</p>
+    </div>
+
+    <div class="top-bar">
+        <div class="header-brand">
+            SIMULADOR GLOBAL
+        </div>    
+        <div class="economy-widgets">
+            <!-- Widget Botón Selector de Equipo -->
+            <div class="widget widget-logo-btn" onclick="openLogoModal()" title="Cambiar Franquicia Activa" style="flex-shrink:0;">
+                <img id="active-team-logo" src="" alt="Franquicia Activa" style="max-height: 50px; max-width: 50px; display: block;">
+            </div>
+            <div class="widget highlight" title="Límite Salarial base extraído directamente de la liga.">
+                <span style="color: var(--accent-blue); font-size:10px; text-transform:uppercase;">Disponible limite salarial</span>
+                <strong id="top-cap" class="data-num" style="font-size:13px;">$0</strong>
+            </div>
+            <div class="widget highlight" title="Presupuesto base extraído de la liga. Normalmente usado para renovar a tus propios jugadores (Derechos Bird/R).">
+                <span style="color: var(--accent-blue); font-size:10px; text-transform:uppercase;">Disponible presupuesto</span>
+                <strong id="top-budget" class="data-num" style="font-size:13px;">$0</strong>
+            </div>
+            <div class="widget" title="Mid-Level Exception. Bolsa de dinero extra para fichar sin consumir Límite Salarial.">
+                <span class="text-muted" style="font-size:10px; text-transform:uppercase;">Disponible MLE</span>
+                <strong id="top-mle" class="data-num" style="font-size:13px;">$0</strong>
+            </div>
+            <div class="widget" style="cursor:pointer;" onclick="openActiveTeamCHModal()" title="Dinero 'congelado' temporalmente por los agentes libres de tu equipo hasta que renueven o renuncies a ellos. (CLICK PARA SIMULAR RENUNCIAS)">
+                <span class="text-muted" style="font-size:10px; text-transform:uppercase;">Cap Hold retenido <span style="font-size:8px;">[+]</span></span>
+                <strong id="top-ch" class="data-num" style="font-size:13px;">$0</strong>
+            </div>
+            <div class="widget" title="Límite Salarial REAL con el que cuentas para fichar a jugadores externos tras descontar tus Cap Holds.">
+                <span class="text-muted" style="font-size:10px; text-transform:uppercase;">Efectivo LS (-Cap Hold)</span>
+                <strong id="top-efectivo" class="data-num" style="font-size:13px;">$0</strong>
+            </div>
+            <div class="widget" title="Presupuesto REAL que tienes tras contabilizar todos los gastos y firmas.">
+                <span class="text-muted" style="font-size:10px; text-transform:uppercase;">Efectivo presupuesto (-Firmas retrasadas)</span>
+                <strong id="top-bud-efectivo" class="data-num" style="font-size:13px;">$0</strong>
+            </div>
+            <div class="widget" title="Número de jugadores en la plantilla (calculado desde players.csv).">
+                <span class="text-muted" style="font-size:10px; text-transform:uppercase;">Jugadores</span>
+                <strong id="top-nplayers" class="data-num" style="font-size:13px;">0</strong>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- CONTENIDO PRINCIPAL -->
+    <div id="main-content" style="display:block; max-width: 100%; padding: 0 20px;">
+        
+        <div class="panel" style="padding:0; overflow:hidden;">
+            <div class="panel-header panel-header-clean" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="panel-title">Agentes Libres</h2>
+                <div class="search-container" style="display: flex; align-items: center; background: var(--bg-base); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 4px 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="var(--text-muted)" viewBox="0 0 16 16" style="margin-right: 6px;">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                    <input type="text" id="player-search-input" placeholder="Buscar jugador... (Enter)" style="background: transparent; border: none; color: var(--text-main); font-family: var(--font-ui); outline: none; font-size: 13px; width: 200px; padding: 2px;">
+                </div>
+            </div>
+            <div class="table-wrap table-wrap-clean">
+                <table id="study-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20px;"></th>
+                            <th>Jugador</th>
+                            <th>Equipo</th>
+                            <th>Pos</th>
+                            <th>Media</th>
+                            <th title="Edad del Jugador">Edad</th>
+                            <th title="Derechos Bird">Bird</th>
+                            <th>R</th>
+                            <th>Aspirantes</th>
+                            <th>Ronda</th>
+                        </tr>
+                    </thead>
+                    <tbody id="study-tbody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fin Main Content -->
+
+    <!-- Modal de Selección de Logo -->
+    <div id="logo-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-panel); border:1px solid var(--border-subtle); border-radius:12px; padding:20px; max-width:800px; width:90%; box-shadow:0 10px 30px rgba(0,0,0,0.8);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                <h3 style="margin:0; color:var(--text-main);">Selecciona tu Franquicia Activa</h3>
+                <button onclick="closeLogoModal()" style="background:transparent; border:none; color:var(--text-muted); font-size:20px; cursor:pointer;">&times;</button>
+            </div>
+            <div id="logo-grid" class="logo-grid-container">
+                <!-- Se rellena por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Interacción con Rival -->
+    <div id="rival-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-panel); border:1px solid var(--border-subtle); border-radius:12px; padding:20px; max-width:900px; width:95%; min-height: 500px; box-shadow:0 10px 40px rgba(0,0,0,0.9); display: flex; flex-direction: column; position:relative;">
+            <button onclick="closeRivalModal()" style="position:absolute; top:15px; right:20px; background:transparent; border:none; color:var(--text-muted); font-size:28px; cursor:pointer; padding:0; z-index:10;">&times;</button>
+            <div style="display:flex; justify-content:center; align-items:center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; margin-bottom:15px;">
+                <h2 id="rival-modal-title" style="margin:0; color:var(--text-main); display:flex; align-items:center; justify-content:center; width:100%;">
+                    <!-- Se rellena por JS -->
+                </h2>
+            </div>
+            <div id="rival-modal-content" style="flex: 1; overflow-y: auto;">
+                <p class="text-muted" style="text-align:center; margin-top: 50px;">Ventana de interacción en construcción...</p>
+                <!-- Se rellena por JS -->
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Modal de Simulador Propio -->
+    <div id="active-ch-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-panel); border:1px solid var(--border-subtle); border-radius:12px; padding:20px; max-width:600px; width:95%; max-height:80vh; box-shadow:0 10px 40px rgba(0,0,0,0.9); display: flex; flex-direction: column; position:relative;">
+            <button onclick="closeActiveTeamCHModal()" style="position:absolute; top:15px; right:20px; background:transparent; border:none; color:var(--text-muted); font-size:28px; cursor:pointer; padding:0; z-index:10;">&times;</button>
+            <div style="display:flex; justify-content:center; align-items:center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 15px; margin-bottom:15px;">
+                <h3 style="margin:0; color:var(--text-main); display:flex; align-items:center; justify-content:center; width:100%;">
+                    MIS DERECHOS (CAP HOLDS)
+                </h3>
+            </div>
+            <div id="active-ch-modal-content" style="flex: 1; overflow-y: auto;">
+                <!-- Se rellena por JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE FIRMAS GLOBAL -->
+    <div id="global-sign-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:10000; justify-content:center; align-items:center;">
+        <div style="background:var(--bg-panel); border:1px solid var(--border-subtle); border-radius:12px; padding:20px; max-width:800px; width:90%; max-height:90vh; overflow-y:auto; box-shadow:0 10px 30px rgba(0,0,0,0.8); display: flex; flex-direction: column; gap: 20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="margin:0; color:var(--text-main);" id="global-sign-modal-title">Firmar a Jugador</h3>
+                <button onclick="closeGlobalSignModal()" style="background:transparent; border:none; color:var(--text-muted); font-size:20px; cursor:pointer;">&times;</button>
+            </div>
+            
+            <div id="global-sim-economy-summary" style="display: flex; justify-content: space-between; font-size: 11px; padding: 8px 12px; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: 6px; color: var(--text-muted);">
+                <div>LS: <span id="global-sim-sum-ls" style="font-family: var(--font-mono); color: var(--text-main); font-weight: bold;"></span></div>
+                <div>PRES: <span id="global-sim-sum-pres" style="font-family: var(--font-mono); color: var(--text-main); font-weight: bold;"></span></div>
+                <div>MLE: <span id="global-sim-sum-mle" style="font-family: var(--font-mono); color: var(--text-main); font-weight: bold;"></span></div>
+            </div>
+
+            <div id="global-sim-player-info" style="display: flex; justify-content: space-between; font-size: 11px; padding: 6px 12px; background: rgba(59, 130, 246, 0.05); border: 1px dashed var(--accent-blue); border-radius: 6px; color: var(--text-muted); margin-top: -10px;">
+                <div>MIN: <span id="global-sim-info-min" style="font-family: var(--font-mono); color: var(--text-main); font-weight: bold;"></span></div>
+                <div>MAX: <span id="global-sim-info-max" style="font-family: var(--font-mono); color: var(--text-main); font-weight: bold;"></span></div>
+                <div>CAP HOLD: <span id="global-sim-info-ch" style="font-family: var(--font-mono); color: var(--text-main); font-weight: bold;"></span></div>
+            </div>
+
+            <div id="global-sign-ch-container">
+                <h4 style="margin: 0 0 10px 0; color: var(--text-main); font-size: 14px;">Gestión de Cap Holds (<span id="global-sign-team-name"></span>)</h4>
+                <div id="global-sign-ch-content"></div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid var(--border-subtle); margin: 0;">
+
+            <div id="global-sign-simulator-panel" style="background: var(--bg-surface); padding: 15px; border-radius: 8px; border: 1px solid var(--border-subtle);">
+                <h4 style="margin: 0 0 15px 0; color: var(--text-main); font-size: 14px;">Firmar Contrato</h4>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <img id="global-sim-player-photo" src="" alt="Foto" style="width: 60px; height: 60px; border-radius: 6px; object-fit: cover; background: var(--bg-base);">
+                    
+                    <div style="flex: 1; display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <label class="text-small text-muted" style="width: 70px; font-size: 12px;">Salario</label>
+                            <input type="number" id="global-sim-salary-input" class="input-dark" style="flex: 1; padding: 6px 10px; font-size: 13px; border-radius: 4px; background: var(--bg-base); color: var(--text-main); border: 1px solid var(--border-subtle);" placeholder="0">
+                        </div>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <label class="text-small text-muted" style="width: 70px; font-size: 12px;">Excepción</label>
+                            <select id="global-sim-exception-select" class="input-dark" style="flex: 1; padding: 6px 10px; font-size: 13px; border-radius: 4px; background: var(--bg-base); color: var(--text-main); border: 1px solid var(--border-subtle);">
+                                <option value="cap">Espacio Salarial (LS)</option>
+                                <option value="mle">Excepción Media (MLE)</option>
+                                <option value="bird">Derechos (Bird/R)</option>
+                                <option value="minimum">Contrato Mínimo</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <button id="global-sim-sign-btn" onclick="executeGlobalSign(false)" style="background: var(--accent-green); color: #fff; border: none; padding: 10px 20px; font-size: 13px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s;">
+                            FIRMAR
+                        </button>
+                        <button id="global-sim-delay-btn" onclick="executeGlobalSign(true)" style="background: var(--accent-blue); color: #fff; border: none; padding: 10px 20px; font-size: 13px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: 0.2s; display: none;">
+                            RETRASAR FIRMA
+                        </button>
+                    </div>
+                </div>
+                <div id="global-sim-feedback" class="text-small" style="margin-top: 10px; font-size: 11px; color: var(--accent-orange); text-align: center;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/reglas.js"></script>
+    <script src="js/simulador_ui.js"></script>
+    <script src="js/simulador.js"></script>
+</body>
+</html>
+

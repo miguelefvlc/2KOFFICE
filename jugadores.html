@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1400">
+    <title>Jugadores - 2K OFFICE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <a href="index.html" class="home-btn" title="Volver al inicio">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+        </svg>
+    </a>
+
+    <div id="loader">
+        <div class="spinner"></div>
+        <div style="font-size: 14px; font-weight: 500; color: var(--text-muted); margin-top: 15px;">Cargando Datos...</div>
+    </div>
+
+    <div class="top-bar">
+        <div class="brand">
+            <h1>Jugadores</h1>
+            <p>Buscador y Base de Datos</p>
+        </div>
+        <div class="economy-widgets">
+            <div class="widget highlight" style="border-color: var(--accent-orange);">
+                <span>Jugadores Encontrados</span>
+                <strong id="players-count">0</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="players-layout">
+        <!-- Sidebar para filtros -->
+        <div class="players-sidebar panel">
+            <h2 class="panel-title" style="margin-bottom: 15px; border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px;">Filtros</h2>
+            
+            <div class="filter-group">
+                <label>Buscar por Nombre</label>
+                <div class="search-input-container">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="search-icon">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                    <input type="text" id="filter-name">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Equipo</label>
+                <select id="filter-team">
+                    <option value="">Todos los Equipos</option>
+                    <option value="FA">Agentes Libres (FA)</option>
+                    <!-- Se llenará dinámicamente -->
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Posición</label>
+                <select id="filter-pos">
+                    <option value="">Todas las Posiciones</option>
+                    <option value="PG">PG (Base)</option>
+                    <option value="SG">SG (Escolta)</option>
+                    <option value="SF">SF (Alero)</option>
+                    <option value="PF">PF (Ala-Pívot)</option>
+                    <option value="C">C (Pívot)</option>
+                </select>
+            </div>
+
+
+
+            <div class="filter-group">
+                <label>Rango de Rating (2K)</label>
+                <div class="range-inputs">
+                    <input type="number" id="filter-rating-min" placeholder="Min" min="40" max="99">
+                    <span>-</span>
+                    <input type="number" id="filter-rating-max" placeholder="Max" min="40" max="99">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Edad</label>
+                <div class="range-inputs">
+                    <input type="number" id="filter-age-min" placeholder="Min" min="18" max="50">
+                    <span>-</span>
+                    <input type="number" id="filter-age-max" placeholder="Max" min="18" max="50">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Salario Máximo: <span id="salary-val">70</span>M$</label>
+                <div class="range-inputs" style="padding-top: 10px;">
+                    <input type="range" id="filter-salary" min="3" max="70" value="70" oninput="document.getElementById('salary-val').textContent = this.value">
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Años de Contrato</label>
+                <div class="years-selector">
+                    <div class="year-btn" onclick="selectYear(1)" id="year-1">1</div>
+                    <div class="year-btn" onclick="selectYear(2)" id="year-2">2</div>
+                    <div class="year-btn" onclick="selectYear(3)" id="year-3">3</div>
+                    <div class="year-btn" onclick="selectYear(4)" id="year-4">4</div>
+                    <div class="year-btn" onclick="selectYear(5)" id="year-5">5</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla de Jugadores -->
+        <div class="players-content panel">
+            <div class="table-responsive">
+                <table class="tooltip-table players-main-table" id="players-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left; cursor:pointer;" onclick="sortBy('name')">Jugador ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('teamName')">Equipo ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('pos')">Pos ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('rating')">Rating ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('age')">Age ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('bird')">Bird ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('r')">R ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('t1')">26/27 ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('t2')">27/28 ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('t3')">28/29 ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('t4')">29/30 ↕</th>
+                            <th style="cursor:pointer;" onclick="sortBy('t5')">30/31 ↕</th>
+                        </tr>
+                    </thead>
+                    <tbody id="players-tbody">
+                        <!-- Filas inyectadas por JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="no-results" style="display:none; text-align:center; padding: 40px; color: var(--text-muted);">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" style="width: 48px; height: 48px; margin: 0 auto 15px; opacity: 0.5;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.182 15.182a4.5 4.5 0 0 1-6.364 0M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0ZM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75Zm3.65 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75Z" />
+                </svg>
+                <p>No se encontraron jugadores que coincidan con los filtros.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+    <script src="js/reglas.js"></script>
+    <script src="js/jugadores.js"></script>
+</body>
+</html>
+

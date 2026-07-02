@@ -1,0 +1,237 @@
+:root {
+    --bg-color: #0f172a;
+    --text-color: #f8fafc;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --accent-1: #3b82f6; /* Blue for Trade */
+    --accent-2: #10b981; /* Green for FA */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
+    background-attachment: fixed;
+}
+
+.header-container {
+    text-align: center;
+    margin-bottom: 4rem;
+    animation: fadeInDown 1s ease-out;
+}
+
+h1 {
+    font-family: 'Outfit', sans-serif;
+    font-size: 5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #fff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    text-shadow: 0px 10px 30px rgba(0,0,0,0.5);
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    color: #94a3b8;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.cards-container {
+    display: flex;
+    gap: 3rem;
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2rem;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+.card {
+    flex: 1;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 4rem 2rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-color);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, transparent);
+    transition: all 0.4s ease;
+}
+
+.card-trade::before {
+    background: linear-gradient(90deg, #3b82f6, #60a5fa);
+    opacity: 0;
+}
+
+.card-fa::before {
+    background: linear-gradient(90deg, #10b981, #34d399);
+    opacity: 0;
+}
+
+.card-jugadores::before {
+    background: linear-gradient(90deg, #f59e0b, #fbbf24);
+    opacity: 0;
+}
+
+.card-equipos::before {
+    background: linear-gradient(90deg, #8b5cf6, #a78bfa);
+    opacity: 0;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card-trade:hover {
+    box-shadow: 0 20px 40px rgba(59, 130, 246, 0.15);
+}
+
+.card-fa:hover {
+    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15);
+}
+
+.card-jugadores:hover {
+    box-shadow: 0 20px 40px rgba(245, 158, 11, 0.15);
+}
+
+.card-equipos:hover {
+    box-shadow: 0 20px 40px rgba(139, 92, 246, 0.15);
+}
+
+.card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.4s ease;
+}
+
+.card-icon svg {
+    width: 4.5rem;
+    height: 4.5rem;
+    filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-fa .card-icon {
+    color: #34d399;
+}
+
+.card-trade .card-icon {
+    color: #60a5fa;
+}
+
+.card-jugadores .card-icon {
+    color: #fbbf24;
+}
+
+.card-equipos .card-icon {
+    color: #a78bfa;
+}
+
+.card:hover .card-icon {
+    transform: translateY(-5px);
+}
+
+.card:hover .card-icon svg {
+    transform: scale(1.15);
+}
+
+.card-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.card-desc {
+    font-size: 1rem;
+    color: #94a3b8;
+    line-height: 1.5;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+    .cards-container {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 0 1rem;
+    }
+    h1 {
+        font-size: 2.8rem;
+        margin-bottom: 0.5rem;
+    }
+    .header-container {
+        margin-bottom: 2rem;
+    }
+    .subtitle {
+        font-size: 1rem;
+    }
+    .card {
+        padding: 2.5rem 1.5rem;
+    }
+    .card-title {
+        font-size: 1.6rem;
+    }
+    .card-icon {
+        height: 3.5rem;
+        margin-bottom: 1rem;
+    }
+    .card-icon svg {
+        width: 3.5rem;
+        height: 3.5rem;
+    }
+}
