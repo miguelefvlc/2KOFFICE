@@ -13,7 +13,7 @@
 
 import { CSV_URLS, FA_TEAM_ID, FREESPOT_BONUS, ROSTER_THRESHOLD, ROSTER_FULL, FIXED_DELAYED_SIM, RANGE_R3_START, RANGE_R3_END, DEFAULT_TEAM, TEAM_LOGOS, TEAM_ABBR, STAR_PATH_FILLED, STAR_PATH_EMPTY } from './shared/constants.js';
 import { CSVService } from './shared/csv_service.js';
-import { mapCsvToTeam, mapCsvToPlayer, renderLogoGrid, updateActiveTeamUI, initPlayerSearch, renderTopTeamsBar, renderTopEconomy, selectTeamByLogo } from './shared/engine.js';
+import { mapCsvToTeam, mapCsvToPlayer } from './shared/engine.js';
 import { parseCurrency, calculateAge, formatCurrency, getColorClass, getPlayerPhotoPath } from './shared/utils.js';
 
 // === ESTADO GLOBAL DEL SIMULADOR ===
